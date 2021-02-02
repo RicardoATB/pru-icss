@@ -3,10 +3,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-data = np.loadtxt("flower.txt")
+data = np.loadtxt("qnx.txt")
 
 x, y = data.T
-#plt.scatter(x,y)
 
 plt.plot(*data.T)
+plt.gca().invert_yaxis()
 plt.show()
