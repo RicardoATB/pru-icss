@@ -37,7 +37,7 @@ with open ("temp.txt", "w") as f_out:
 		if (i > 270 and i <= 360):
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))
-			angle = 180 - i	
+			angle = i - 90	
 	
 		f_out.write(str("{:>5.2f}".format(round(x,2))) + " \t" + str("{:>5.2f}".format(round(y,2))) \
 		+ "\t# vertex " + str(internal_angles.index(i)+1) + " @ " + str("{:>6.2f}".format(angle)) + str("\u00b0\n"))
