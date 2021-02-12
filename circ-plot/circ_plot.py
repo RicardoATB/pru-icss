@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 from math import sin, cos
 
 internal_angles = []
@@ -10,11 +11,10 @@ radius = float(input("Enter maximum size (diameter): "))/2
 vert_angle = 360/num_vert
 
 # creating iterable list of all internal angles
-#internal_angles = [i for i in range(0, 360) if i % vert_angle == 0]
 for i in range(0, num_vert+1):
 	internal_angles.insert(i, float(i*vert_angle))
 
-with open ("coordinates.txt", "w") as f_out:
+with open ("temp.txt", "w") as f_out:
 	for i in internal_angles:
 		# quadrant I
 		if (i <= 90):
@@ -45,9 +45,18 @@ with open ("coordinates.txt", "w") as f_out:
 # ploting geometric shape
 # Must set figsize before plotting it
 plt.figure(figsize=(30,30))
-data = np.loadtxt("coordinates.txt")
+data = np.loadtxt("temp.txt")
 x, y = data.T
 plt.plot(*data.T, linewidth=3, marker=".", markersize=40, markerfacecolor='r')
+
+# deleting last coordinate from "coordinates.txt" (as it was just used to close the shape)
+with open ("temp.txt") as f_in, open ("vertices.txt", "w") as f_out:
+	lines = f_in.readlines()
+	lines = lines[:-1]
+	#f_out.seek(0)	# set the pointer to the beginning of the file in order to rewrite the content
+	for item in lines:
+		f_out.write("{}".format(item))
+os.remove("temp.txt")
 
 # ploting components
 """
