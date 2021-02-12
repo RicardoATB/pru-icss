@@ -37,15 +37,22 @@ with open ("coordinates.txt", "w") as f_out:
 			y = radius * sin(np.deg2rad(i))		
 	
 		print("x = ", round(x,2),", y = ", round(y,2), "\n")
-		f_out.write(str(round(x,2)) + " \t" + str(round(y,2)) + "\t# vertex " + \
-					str(internal_angles.index(i)+1) + ": " + str(i) + "\u00b0\n")
+		f_out.write(str("{:>5.2f}".format(round(x,2))) + " \t" + str("{:>5.2f}".format(round(y,2))) \
+		+ "\t# vertex " + str(internal_angles.index(i)+1) + " @ " + str("{:>6.2f}".format(i)) + "\u00b0\n")
 
-# ploting
+# ploting geometric shape
 # Must set figsize before plotting it
 plt.figure(figsize=(30,30))
 data = np.loadtxt("coordinates.txt")
 x, y = data.T
 plt.plot(*data.T, linewidth=3, marker=".", markersize=40, markerfacecolor='r')
-#plt.gca().invert_yaxis()
+
+# ploting components
+"""
+x1, y1 = [-1, 12], [1, 10]
+x2, y2 = [-1, 10], [3, -1]
+plt.plot(x1, y1, x2, y2, marker = "o")
+"""
+
 plt.axis('equal')
 plt.show()
