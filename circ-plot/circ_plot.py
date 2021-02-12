@@ -17,21 +17,21 @@ for i in range(0, num_vert+1):
 with open ("coordinates.txt", "w") as f_out:
 	for i in internal_angles:
 		print ("\nFor angle ", i, ":")
-		# quadrant 1
+		# quadrant I
 		if (i <= 90):
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))
-		# quadrant 2
+		# quadrant II
 		if (i <= 180 and i > 90):
 			q2_i = 180 - i;
 			x = -radius * cos(np.deg2rad(q2_i))
 			y = radius * sin(np.deg2rad(q2_i))
-		# quadrant 3
+		# quadrant III
 		if (i > 180 and i <= 270):
 			q3_i = i - 180
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))
-		# quadrant 4
+		# quadrant IV
 		if (i > 270 and i <= 360):
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))		
