@@ -10,7 +10,7 @@ data = np.loadtxt("qnx.txt")
 
 x, y = data.T
 
-plt.plot(*data.T)
-plt.gca().invert_yaxis()
+plt.plot(*data.T, linewidth=3)
+#plt.gca().invert_yaxis()
 plt.axis('equal')
 plt.show()
