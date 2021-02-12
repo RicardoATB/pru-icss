@@ -16,29 +16,31 @@ for i in range(0, num_vert+1):
 
 with open ("coordinates.txt", "w") as f_out:
 	for i in internal_angles:
-		print ("\nFor angle ", i, ":")
 		# quadrant I
 		if (i <= 90):
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))
+			angle = i - 90
 		# quadrant II
 		if (i <= 180 and i > 90):
 			q2_i = 180 - i;
 			x = -radius * cos(np.deg2rad(q2_i))
 			y = radius * sin(np.deg2rad(q2_i))
+			angle = 90 - q2_i
 		# quadrant III
 		if (i > 180 and i <= 270):
 			q3_i = i - 180
 			x = radius * cos(np.deg2rad(i))
 			y = radius * sin(np.deg2rad(i))
+			angle = -270 + q3_i
 		# quadrant IV
 		if (i > 270 and i <= 360):
 			x = radius * cos(np.deg2rad(i))
-			y = radius * sin(np.deg2rad(i))		
+			y = radius * sin(np.deg2rad(i))
+			angle = 180 - i	
 	
-		print("x = ", round(x,2),", y = ", round(y,2), "\n")
 		f_out.write(str("{:>5.2f}".format(round(x,2))) + " \t" + str("{:>5.2f}".format(round(y,2))) \
-		+ "\t# vertex " + str(internal_angles.index(i)+1) + " @ " + str("{:>6.2f}".format(i)) + "\u00b0\n")
+		+ "\t# vertex " + str(internal_angles.index(i)+1) + " @ " + str("{:>6.2f}".format(angle)) + str("\u00b0\n"))
 
 # ploting geometric shape
 # Must set figsize before plotting it
