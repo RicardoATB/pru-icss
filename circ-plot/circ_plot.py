@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import os
-#from math import sin, cos, sqrt, atan, pi
 import math
-
 
 def slope(x, y, q):
 	if (q == 1 or q == 3):
@@ -19,20 +17,6 @@ def comp_center_x(comp_y, x, y, q, m):
 		return (x + comp_y/(math.sqrt(1 + m*m)))
 	if (q == 2 or q == 3):
 		return (x - comp_y/(math.sqrt(1 + m*m)))
-
-"""
-x1=0;y1=0;x2=6;y2=0; % initial data
-alp1=2*pi/3;alp2=pi/6; % initial data
-u=x2-x1;v=y2-y1;a3=sqrt(u^2+v^2);
-alp3=pi-alp1-alp2;
-a2=a3*sin(alp2)/sin(alp3);
-RHS1=x1*u+y1*v+a2*a3*cos(alp1);
-RHS2=y2*u-x2*v-a2*a3*sin(alp1);
-x3=(1/a3^2)*(u*RHS1-v*RHS2);
-y3=(1/a3^2)*(v*RHS1+u*RHS2);
-"""
-
-#x3 = y3 = 0
 
 def int_angle_comp():
 	 return math.atan((comp_x/2)/(comp_y/2))
@@ -68,7 +52,7 @@ def plot_component(q, x, y, angle):
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
 		offset_x = center_pair[0]
 		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 2):
 		m = slope(x, y, q)
@@ -77,7 +61,7 @@ def plot_component(q, x, y, angle):
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
 		offset_x = center_pair[0]
 		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 3):
 		m = slope(x, y, q)
@@ -86,7 +70,7 @@ def plot_component(q, x, y, angle):
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
 		offset_x = center_pair[0]
 		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth =5)
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth =5)
 		plt.gca().add_patch(rect)
 	if (q == 4):
 		m = slope(x, y, q)
@@ -95,7 +79,7 @@ def plot_component(q, x, y, angle):
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
 		offset_x = center_pair[0]
 		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 
 def plot_graph():
@@ -103,7 +87,7 @@ def plot_graph():
 	# Must set figsize before plotting it
 	data = np.loadtxt("temp.txt")
 	x, y = data.T
-	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='b')
+	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='gray', color = 'silver', zorder = 0)
 
 	# deleting last coordinate from "coordinates.txt" (as it was just used to close the shape)
 	with open ("temp.txt") as f_in, open ("vertices.txt", "w") as f_out:
