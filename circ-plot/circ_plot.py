@@ -12,7 +12,6 @@ def plot_component(q, x, y, angle):
 	#x2, y2 = [-1, 10], [3, -1]
 	#plt.plot(x1, y1, x2, y2, marker = "o")
 	# radius * cos(np.deg2rad(i))
-	plt.axes()
 	if (q == 1):
 		rect = plt.Rectangle((x,y), comp_x/10, comp_y/10, angle, fc='blue', ec="red")
 		plt.gca().add_patch(rect)
