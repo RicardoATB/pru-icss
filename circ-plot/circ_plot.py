@@ -32,13 +32,14 @@ x3=(1/a3^2)*(u*RHS1-v*RHS2);
 y3=(1/a3^2)*(v*RHS1+u*RHS2);
 """
 
-x3 = y3 = 0
+#x3 = y3 = 0
 
 def int_angle_comp():
 	 return math.atan((comp_x/2)/(comp_y/2))
 
 def comp_center_coord(x, y, comp_vert_x, comp_vert_y):
-	global x3, y3
+	#global x3, y3
+	comp_center_pair = []
 	offset_pair = []
 	alp1 = alp2 = alpha
 	alp3 = math.pi - 2*alpha
@@ -46,59 +47,55 @@ def comp_center_coord(x, y, comp_vert_x, comp_vert_y):
 	y1 = y
 	x2 = comp_vert_x
 	y2 = comp_vert_y
-	#x1=0;y1=0;x2=6;y2=0		 			# initial data
-	#alp1=2*pi/3;alp2=pi/6				# initial data
 	u = x2-x1
 	v = y2-y1
 	a3 = math.sqrt(u*u + v*v)	
-	#alp3=pi-alp1-alp2
 	a2 = a3 * math.sin(alp2)/math.sin(alp3)
 	RHS1 = x1*u + y1*v + a2*a3*math.cos(alp1)
 	RHS2 = y2*u - x2*v - a2*a3*math.sin(alp1)
-	
-	#offset_pair.append((1/a3*a3)*(u*RHS1 - v*RHS2))
-	#offset_pair.append((1/a3*a3)*(v*RHS1 + u*RHS2))
-	
-	x3 = (1/(a3*a3))*(u*RHS1 - v*RHS2)
-	y3 = (1/(a3*a3))*(v*RHS1 + u*RHS2)
+	comp_center_pair.append((1/(a3*a3))*(u*RHS1 - v*RHS2))
+	comp_center_pair.append((1/(a3*a3))*(v*RHS1 + u*RHS2))
+	return comp_center_pair
 
-	print ("x3 = ", x3, ", y3 = ", y3)
-	#return offset_pair
-	
+#Math formula: https://math.stackexchange.com/questions/1725790/calculate-third-point-of-triangle-from-two-points-and-angles	
 def plot_component(q, x, y, angle):
 	# ploting components
+	center_pair = []
 	if (q == 1):
 		m = slope(x, y, q)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
-		plt.plot(comp_vert_x, comp_vert_y, 'o', color='black', markersize = 20, markerfacecolor = 'g');
-		
-		comp_center_coord(x, y, comp_vert_x, comp_vert_y)
-		plt.plot(x3, y3, 'o', color='black', markersize = 20, markerfacecolor = [0,1,1,1])
-		
-
-		rect = plt.Rectangle((x,y), comp_x, comp_y, angle, fc='blue', ec="red")
+		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
+		offset_x = center_pair[0]
+		offset_y = center_pair[1]
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 2):
 		m = slope(x, y, q)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
-		plt.plot(comp_vert_x, comp_vert_y, 'o', color='black', markersize = 20, markerfacecolor = 'g');
-		rect = plt.Rectangle((x,y), comp_x, comp_y, angle, fc='blue', ec="red")
+		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
+		offset_x = center_pair[0]
+		offset_y = center_pair[1]
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 3):
 		m = slope(x, y, q)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
-		plt.plot(comp_vert_x, comp_vert_y, 'o', color='black', markersize = 20, markerfacecolor = 'g');
-		rect = plt.Rectangle((x,y), comp_x, comp_y, angle, fc='blue', ec="red")
+		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
+		offset_x = center_pair[0]
+		offset_y = center_pair[1]
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth =5)
 		plt.gca().add_patch(rect)
 	if (q == 4):
 		m = slope(x, y, q)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
-		plt.plot(comp_vert_x, comp_vert_y, 'o', color='black', markersize = 20, markerfacecolor = 'g');
-		rect = plt.Rectangle((x,y), comp_x, comp_y, angle, fc='blue', ec="red")
+		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
+		offset_x = center_pair[0]
+		offset_y = center_pair[1]
+		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, fc="white", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 
 def plot_graph():
@@ -106,7 +103,7 @@ def plot_graph():
 	# Must set figsize before plotting it
 	data = np.loadtxt("temp.txt")
 	x, y = data.T
-	plt.plot(*data.T, linewidth=3, marker=".", markersize=40, markerfacecolor='r')
+	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='b')
 
 	# deleting last coordinate from "coordinates.txt" (as it was just used to close the shape)
 	with open ("temp.txt") as f_in, open ("vertices.txt", "w") as f_out:
