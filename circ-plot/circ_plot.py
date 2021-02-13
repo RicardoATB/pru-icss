@@ -152,9 +152,9 @@ def main():
 	plot_graph()
 
 num_vert = int(input("Enter number of vertices: "))
-radius = float(input("Enter maximum size (diameter): "))/2
-comp_x = float(input("Enter component width (x): "))
-comp_y = float(input("Enter component heigh (y): "))
+comp_x = float(input("Enter component width (mm): "))
+comp_y = float(input("Enter component heigh (mm): "))
+radius = (float(input("Enter max diameter of components placement (mm): ")) - comp_y)/2
 tilt = input("Bottom side flat to horizontal? (y/n): ")
 alpha = int_angle_comp()
 
