@@ -121,10 +121,16 @@ def main():
 	plt.figure(figsize=(30,30))
 	internal_angles = []
 	vert_angle = 360/num_vert
+	tilt_angle = 0
+
+	if (tilt == "y"):
+		tilt_angle = 180 - 3*((180 - vert_angle)/2)
 
 	# creating iterable list of all internal angles
 	for i in range(0, num_vert+1):
-		internal_angles.insert(i, float(i*vert_angle))
+		internal_angles.insert(i, float(tilt_angle + i*vert_angle))
+	
+	print(internal_angles)
 
 	with open ("temp.txt", "w") as f_out:
 		for i in internal_angles:
@@ -164,6 +170,7 @@ num_vert = int(input("Enter number of vertices: "))
 radius = float(input("Enter maximum size (diameter): "))/2
 comp_x = float(input("Enter component width (x): "))
 comp_y = float(input("Enter component heigh (y): "))
+tilt = input("Bottom side flat to horizontal? (y/n): ")
 alpha = int_angle_comp()
 
 main()
