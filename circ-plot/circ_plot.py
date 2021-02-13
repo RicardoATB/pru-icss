@@ -155,7 +155,8 @@ def main():
 				angle = -270 + q3_i
 				plot_component(3, x, y, angle)
 			# quadrant IV
-			if (i > 270 and i <= 360):
+			#if (i > 270 and i <= 360):
+			if (i > 270):
 				x = radius * math.cos(np.deg2rad(i))
 				y = radius * math.sin(np.deg2rad(i))
 				angle = i - 90	
