@@ -6,11 +6,15 @@ import numpy as np
 import os
 import math
 
-def slope(x, y, q):
-	if (q == 1 or q == 3):
-		return (y/x)
-	if (q == 2 or q == 4):
-		return (y/x)
+def slope(x, y):
+		if (x == 0 and y > 0):
+			return 1
+		elif (x == 0 and y < 0):
+			return -1
+		elif (x ==0 and y ==0):
+			return 0
+		else:
+			return (y/x)
 
 def comp_center_x(comp_y, x, y, q, m):
 	if (q == 1 or q == 4):
@@ -46,7 +50,7 @@ def plot_component(q, x, y, angle):
 	# ploting components
 	center_pair = []
 	if (q == 1):
-		m = slope(x, y, q)
+		m = slope(x, y)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
@@ -55,7 +59,7 @@ def plot_component(q, x, y, angle):
 		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 2):
-		m = slope(x, y, q)
+		m = slope(x, y)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
@@ -64,7 +68,7 @@ def plot_component(q, x, y, angle):
 		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 	if (q == 3):
-		m = slope(x, y, q)
+		m = slope(x, y)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
@@ -73,7 +77,7 @@ def plot_component(q, x, y, angle):
 		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth =5)
 		plt.gca().add_patch(rect)
 	if (q == 4):
-		m = slope(x, y, q)
+		m = slope(x, y)
 		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
 		comp_vert_y = m*comp_vert_x
 		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
@@ -112,9 +116,9 @@ def main():
 
 	# creating iterable list of all internal angles
 	for i in range(0, num_vert+1):
-		internal_angles.insert(i, float(tilt_angle + i*vert_angle))
-	
-	print(internal_angles)
+		internal_angles.append(float(tilt_angle + i*vert_angle))
+
+	print("internal_angles = ", internal_angles)
 
 	with open ("temp.txt", "w") as f_out:
 		for i in internal_angles:
@@ -125,7 +129,7 @@ def main():
 				angle = i - 90
 				plot_component(1, x, y, angle)
 			# quadrant II
-			if (i <= 180 and i > 90):
+			if (i > 90 and i<= 180):
 				q2_i = 180 - i;
 				x = -radius * math.cos(np.deg2rad(q2_i))
 				y = radius * math.sin(np.deg2rad(q2_i))
@@ -139,7 +143,6 @@ def main():
 				angle = -270 + q3_i
 				plot_component(3, x, y, angle)
 			# quadrant IV
-			#if (i > 270 and i <= 360):
 			if (i > 270):
 				x = radius * math.cos(np.deg2rad(i))
 				y = radius * math.sin(np.deg2rad(i))
