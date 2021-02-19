@@ -86,10 +86,13 @@ def plot_component(q, x, y, angle):
 		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
 		plt.gca().add_patch(rect)
 
+# ploting connected geometric shape (gray line)
 def plot_graph():
-	# ploting geometric shape
-	# Must set figsize before plotting it
-	data = np.loadtxt("temp.txt")
+	with open("temp.txt") as f:
+    	# skipping first comment row
+		lines = (line for line in f if not line.startswith("#"))
+		data = np.loadtxt(lines, skiprows=1)
+		#data = np.loadtxt("temp.txt")
 	x, y = data.T
 	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='gray', color = 'silver', zorder = 0)
 
@@ -113,7 +116,7 @@ def main():
 
 	if (tilt == "y"):
 		tilt_angle = 180 - 3*((180 - vert_angle)/2)
-
+	
 	# creating iterable list of all internal angles
 	for i in range(0, num_vert+1):
 		internal_angles.append(float(tilt_angle + i*vert_angle))
@@ -121,6 +124,7 @@ def main():
 	print("internal_angles = ", internal_angles)
 
 	with open ("temp.txt", "w") as f_out:
+		f_out.write("#  X       Y            Comment\n") # table header
 		for i in internal_angles:
 			# quadrant I
 			if (i <= 90):
@@ -149,9 +153,11 @@ def main():
 				angle = i - 90	
 				plot_component(4, x, y, angle)
 	
-			f_out.write(str("{:>5.2f}".format(round(x,2))) + " \t" + str("{:>5.2f}".format(round(y,2))) \
-			+ "\t# vertex " + str(internal_angles.index(i)+1) + " @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
+			f_out.write(str("{:>6.2f}".format(round(x,2))) + " \t" + str("{:>6.2f}".format(round(y,2))) \
+			+ "\t# vertex " + str("{:>2.0f}".format(internal_angles.index(i)+1)) + \
+			" @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
 
+	os.system("cat vertices.txt") # print list of coordinates for each vertex
 	plot_graph()
 
 num_vert = int(input("Enter number of vertices of geometric placement: "))
