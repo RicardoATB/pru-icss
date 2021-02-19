@@ -16,6 +16,8 @@ def slope(x, y):
 		else:
 			return (y/x)
 
+# Finding a point along a line a certain distance away from another point
+# Math formula: https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
 def comp_center_x(comp_y, x, y, q, m):
 	if (q == 1 or q == 4):
 		return (x + comp_y/(math.sqrt(1 + m*m)))
@@ -25,6 +27,8 @@ def comp_center_x(comp_y, x, y, q, m):
 def int_angle_comp():
 	 return math.atan((comp_x/2)/(comp_y/2))
 
+# Calculate third point of a triangle given two points and angles
+# Math formula: https://math.stackexchange.com/questions/1725790/calculate-third-point-of-triangle-from-two-points-and-angles
 def comp_center_coord(x, y, comp_vert_x, comp_vert_y):
 	#global x3, y3
 	comp_center_pair = []
@@ -45,9 +49,8 @@ def comp_center_coord(x, y, comp_vert_x, comp_vert_y):
 	comp_center_pair.append((1/(a3*a3))*(v*RHS1 + u*RHS2))
 	return comp_center_pair
 
-#Math formula: https://math.stackexchange.com/questions/1725790/calculate-third-point-of-triangle-from-two-points-and-angles	
+# Ploting components (green rectangles)
 def plot_component(q, x, y, angle):
-	# ploting components
 	center_pair = []
 	if (q == 1):
 		m = slope(x, y)
@@ -92,11 +95,10 @@ def plot_graph():
     	# skipping first comment row
 		lines = (line for line in f if not line.startswith("#"))
 		data = np.loadtxt(lines, skiprows=1)
-		#data = np.loadtxt("temp.txt")
 	x, y = data.T
 	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='gray', color = 'silver', zorder = 0)
 
-	# deleting last coordinate from "coordinates.txt" (as it was just used to close the shape)
+	# deleting last coordinate from "temp.txt", equals to the first, as it was just used to close the geometric shape
 	with open ("temp.txt") as f_in, open ("vertices.txt", "w") as f_out:
 		lines = f_in.readlines()
 		lines = lines[:-1]
@@ -120,8 +122,6 @@ def main():
 	# creating iterable list of all internal angles
 	for i in range(0, num_vert+1):
 		internal_angles.append(float(tilt_angle + i*vert_angle))
-
-	print("internal_angles = ", internal_angles)
 
 	with open ("temp.txt", "w") as f_out:
 		f_out.write("#  X       Y            Comment\n") # table header
