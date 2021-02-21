@@ -6,6 +6,68 @@ import numpy as np
 import os
 import math
 
+def main():
+	user_input()
+	plt.figure(figsize=(30,30))
+	internal_angles = []
+	vert_angle = 360/num_vert
+	tilt_angle = 0
+
+	# option to make the bottom geometric side horizontal
+	if (tilt == "y"):
+		tilt_angle = 180 - 3*((180 - vert_angle)/2)
+	
+	# create iterable list of all internal angles
+	for i in range(0, num_vert+1):
+		internal_angles.append(float(tilt_angle + i*vert_angle))
+
+	with open ("vertices.txt", "w") as f_out:
+		f_out.write("#  X       Y            Comment\n") # table header
+		for i in internal_angles:
+			# quadrant I
+			if (i <= 90):
+				x = radius * math.cos(np.deg2rad(i))
+				y = radius * math.sin(np.deg2rad(i))
+				angle = i - 90
+				plot_component(1, x, y, angle)
+			# quadrant II
+			if (i > 90 and i<= 180):
+				q2_i = 180 - i;
+				x = -radius * math.cos(np.deg2rad(q2_i))
+				y = radius * math.sin(np.deg2rad(q2_i))
+				angle = 90 - q2_i
+				plot_component(2, x, y, angle)
+			# quadrant III
+			if (i > 180 and i <= 270):
+				q3_i = i - 180
+				x = radius * math.cos(np.deg2rad(i))
+				y = radius * math.sin(np.deg2rad(i))
+				angle = -270 + q3_i
+				plot_component(3, x, y, angle)
+			# quadrant IV
+			if (i > 270):
+				x = radius * math.cos(np.deg2rad(i))
+				y = radius * math.sin(np.deg2rad(i))
+				angle = i - 90	
+				plot_component(4, x, y, angle)
+	
+			f_out.write(str("{:>6.2f}".format(round(x,2))) + " \t" + str("{:>6.2f}".format(round(y,2))) \
+			+ "\t# vertex " + str("{:>2.0f}".format(internal_angles.index(i)+1)) + \
+			" @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
+
+	plot_graph()
+	delete_last_coord()
+	os.system("cat vertices.txt") # print list of coordinates and angles for each vertex
+
+def user_input():
+	global num_vert, comp_x, comp_y, radius, tilt, alpha
+	num_vert = int(input("Enter number of vertices of geometric placement: "))
+	comp_x = float(input("Enter component width footprint (mm): "))
+	comp_y = float(input("Enter component heigh footprint (mm): "))
+	radius = (float(input("Enter max diameter of components placement (mm): ")) - comp_y)/2
+	tilt = input("Bottom side flat to horizontal? (y/n): ")
+	alpha = int_angle_comp()
+
 def slope(x, y):
 		if (x == 0 and y > 0):
 			return 1
@@ -52,42 +114,14 @@ def comp_center_coord(x, y, comp_vert_x, comp_vert_y):
 # Ploting components (green rectangles)
 def plot_component(q, x, y, angle):
 	center_pair = []
-	if (q == 1):
-		m = slope(x, y)
-		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
-		comp_vert_y = m*comp_vert_x
-		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
-		offset_x = center_pair[0]
-		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
-		plt.gca().add_patch(rect)
-	if (q == 2):
-		m = slope(x, y)
-		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
-		comp_vert_y = m*comp_vert_x
-		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
-		offset_x = center_pair[0]
-		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
-		plt.gca().add_patch(rect)
-	if (q == 3):
-		m = slope(x, y)
-		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
-		comp_vert_y = m*comp_vert_x
-		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
-		offset_x = center_pair[0]
-		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth =5)
-		plt.gca().add_patch(rect)
-	if (q == 4):
-		m = slope(x, y)
-		comp_vert_x = comp_center_x(comp_y, x, y, q, m)
-		comp_vert_y = m*comp_vert_x
-		center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
-		offset_x = center_pair[0]
-		offset_y = center_pair[1]
-		rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
-		plt.gca().add_patch(rect)
+	m = slope(x, y)
+	comp_vert_x = comp_center_x(comp_y, x, y, q, m)
+	comp_vert_y = m*comp_vert_x
+	center_pair = comp_center_coord(x, y, comp_vert_x, comp_vert_y)
+	offset_x = center_pair[0]
+	offset_y = center_pair[1]
+	rect = plt.Rectangle((x - (offset_x -x), y - (offset_y - y)), comp_x, comp_y, angle, facecolor="none", ec="green", linewidth = 5)
+	plt.gca().add_patch(rect)
 
 # ploting connected geometric shape (gray line)
 def plot_graph():
@@ -109,63 +143,5 @@ def delete_last_coord():
 		f.truncate() # delete actual file content
 		for item in lines_minus_last:
 			f.write("{}".format(item))
-
-def main():
-	plt.figure(figsize=(30,30))
-	internal_angles = []
-	vert_angle = 360/num_vert
-	tilt_angle = 0
-
-	if (tilt == "y"):
-		tilt_angle = 180 - 3*((180 - vert_angle)/2)
-	
-	# creating iterable list of all internal angles
-	for i in range(0, num_vert+1):
-		internal_angles.append(float(tilt_angle + i*vert_angle))
-
-	with open ("vertices.txt", "w") as f_out:
-		f_out.write("#  X       Y            Comment\n") # table header
-		for i in internal_angles:
-			# quadrant I
-			if (i <= 90):
-				x = radius * math.cos(np.deg2rad(i))
-				y = radius * math.sin(np.deg2rad(i))
-				angle = i - 90
-				plot_component(1, x, y, angle)
-			# quadrant II
-			if (i > 90 and i<= 180):
-				q2_i = 180 - i;
-				x = -radius * math.cos(np.deg2rad(q2_i))
-				y = radius * math.sin(np.deg2rad(q2_i))
-				angle = 90 - q2_i
-				plot_component(2, x, y, angle)
-			# quadrant III
-			if (i > 180 and i <= 270):
-				q3_i = i - 180
-				x = radius * math.cos(np.deg2rad(i))
-				y = radius * math.sin(np.deg2rad(i))
-				angle = -270 + q3_i
-				plot_component(3, x, y, angle)
-			# quadrant IV
-			if (i > 270):
-				x = radius * math.cos(np.deg2rad(i))
-				y = radius * math.sin(np.deg2rad(i))
-				angle = i - 90	
-				plot_component(4, x, y, angle)
-	
-			f_out.write(str("{:>6.2f}".format(round(x,2))) + " \t" + str("{:>6.2f}".format(round(y,2))) \
-			+ "\t# vertex " + str("{:>2.0f}".format(internal_angles.index(i)+1)) + \
-			" @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
-
-	plot_graph()
-	delete_last_coord()
-	os.system("cat vertices.txt") # print list of coordinates and angles for each vertex
-
-num_vert = int(input("Enter number of vertices of geometric placement: "))
-comp_x = float(input("Enter component width footprint (mm): "))
-comp_y = float(input("Enter component heigh footprint (mm): "))
-radius = (float(input("Enter max diameter of components placement (mm): ")) - comp_y)/2
-tilt = input("Bottom side flat to horizontal? (y/n): ")
-alpha = int_angle_comp()
 
 main()
