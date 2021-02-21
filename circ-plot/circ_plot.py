@@ -91,24 +91,24 @@ def plot_component(q, x, y, angle):
 
 # ploting connected geometric shape (gray line)
 def plot_graph():
-	with open("temp.txt") as f:
+	with open("vertices.txt") as f:
     	# skipping first comment row
 		lines = (line for line in f if not line.startswith("#"))
-		data = np.loadtxt(lines, skiprows=1)
+		data = np.loadtxt(lines)
 	x, y = data.T
 	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='gray', color = 'silver', zorder = 0)
-
-	# deleting last coordinate from "temp.txt", equals to the first, as it was just used to close the geometric shape
-	with open ("temp.txt") as f_in, open ("vertices.txt", "w") as f_out:
-		lines = f_in.readlines()
-		lines = lines[:-1]
-		#f_out.seek(0)	# set the pointer to the beginning of the file in order to rewrite the content
-		for item in lines:
-			f_out.write("{}".format(item))
-	os.remove("temp.txt")
-
 	plt.axis('equal')
 	plt.show()
+
+# deleting last coordinate from "vertices.txt" (as it was just used to close the geometric shape w/ gray line)
+def delete_last_coord():
+	with open ("vertices.txt", "r+") as f:
+		lines = f.readlines()
+		lines_minus_last = lines[:-1] # skip last line (same coordinate as the first)
+		f.seek(0) # set the pointer to the beginning of the file in order to rewrite the content
+		f.truncate() # delete actual file content
+		for item in lines_minus_last:
+			f.write("{}".format(item))
 
 def main():
 	plt.figure(figsize=(30,30))
@@ -123,7 +123,7 @@ def main():
 	for i in range(0, num_vert+1):
 		internal_angles.append(float(tilt_angle + i*vert_angle))
 
-	with open ("temp.txt", "w") as f_out:
+	with open ("vertices.txt", "w") as f_out:
 		f_out.write("#  X       Y            Comment\n") # table header
 		for i in internal_angles:
 			# quadrant I
@@ -157,8 +157,9 @@ def main():
 			+ "\t# vertex " + str("{:>2.0f}".format(internal_angles.index(i)+1)) + \
 			" @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
 
-	os.system("cat vertices.txt") # print list of coordinates for each vertex
 	plot_graph()
+	delete_last_coord()
+	os.system("cat vertices.txt") # print list of coordinates and angles for each vertex
 
 num_vert = int(input("Enter number of vertices of geometric placement: "))
 comp_x = float(input("Enter component width footprint (mm): "))
