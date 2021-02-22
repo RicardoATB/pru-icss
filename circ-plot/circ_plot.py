@@ -1,5 +1,8 @@
 #!/usr/bin/python3.8
 
+# Program used to output the coordinates and angles of components placed at
+# the vertices of a geometric shape with n-sides
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -51,17 +54,18 @@ def main():
 				angle = i - 90	
 				plot_component(4, x, y, angle)
 	
+			# write coordinates and angles to 'vertices.txt'
 			f_out.write(str("{:>6.2f}".format(round(x,2))) + " \t" + str("{:>6.2f}".format(round(y,2))) \
 			+ "\t# vertex " + str("{:>2.0f}".format(internal_angles.index(i)+1)) + \
 			" @ " + str("{:>7.2f}".format(angle)) + str("\u00b0\n"))
 
-	plot_graph()
+	plot_geometric_shape()
 	delete_last_coord()
 	os.system("cat vertices.txt") # print list of coordinates and angles for each vertex
 
 def user_input():
 	global num_vert, comp_x, comp_y, radius, tilt, alpha
-	num_vert = int(input("Enter number of vertices of geometric placement: "))
+	num_vert = int(input("Enter number of vertices: "))
 	comp_x = float(input("Enter component width footprint (mm): "))
 	comp_y = float(input("Enter component heigh footprint (mm): "))
 	radius = (float(input("Enter max diameter of components placement (mm): ")) - comp_y)/2
@@ -124,7 +128,7 @@ def plot_component(q, x, y, angle):
 	plt.gca().add_patch(rect)
 
 # ploting connected geometric shape (gray line)
-def plot_graph():
+def plot_geometric_shape():
 	with open("vertices.txt") as f:
     	# skipping first comment row
 		lines = (line for line in f if not line.startswith("#"))
