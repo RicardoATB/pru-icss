@@ -3,22 +3,33 @@
 # Program used to output the coordinates and angles of components placed at
 # the vertices of a geometric shape with n-sides
 
-#"it's nice to keep the imports in alphabetical order"
+import argparse
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import math
 import numpy as np
-import os
+import sys
 
 def main():
-	user_input()
+	global num_vert, comp_x, comp_y, radius, tilt, alpha
+	
+	args = parse_args()
+	
+	num_vert = args.vertices
+	comp_x = args.width
+	comp_y = args.height
+	radius = (args.diameter - comp_y)/2
+	tilt = args.flat
+	
+	alpha = int_angle_comp()
+	
 	plt.figure(figsize=(30,30))
 	internal_angles = []
 	vert_angle = 360/num_vert
 	tilt_angle = 0
 
 	# option to make the bottom geometric side horizontal
-	if (tilt == "y"):
+	if (tilt == "yes"):
 		tilt_angle = 180 - 3*((180 - vert_angle)/2)
 	
 	# create iterable list of all internal angles
@@ -62,7 +73,30 @@ def main():
 
 	plot_geometric_shape()
 	delete_last_coord()
-	os.system("cat vertices.txt") # print list of coordinates and angles for each vertex
+
+	# print to stdout contents of "vertices.txt"	
+	with open (args.output, "r+") as handle:
+		list_vertices = handle.read()
+		print(list_vertices)
+	
+	plt.show()	
+
+def parse_args():
+	"""
+    Parse arguments
+    """
+	parser = argparse.ArgumentParser(description="Calculate position and plot graphical representation of components \
+		placed at the vertices of a geometric shape", 
+		epilog='Example: ./circ_plot.py --vertices 8 --width 3 --height 5 --diameter 50 --flat yes --output vertices.txt')
+	parser.add_argument("--vertices", metavar = "", required = True, type=int, help="Number of vertices of the geometric shape")
+	parser.add_argument("--width", metavar = "", required = True, type=float, help="Component width")
+	parser.add_argument("--height", metavar = "", required = True, type=float, help="Component height")
+	parser.add_argument("--diameter", metavar = "", required = True, type=float, help="Maximum diameter used by all components")
+	parser.add_argument("--flat", metavar = "", required = True, type=str, choices=["yes","no"], \
+		help="Bottom side flat to horizontal? (yes/no)")
+	parser.add_argument("--output", metavar = "", required = True, type=str, help="Bottom side flat to horizontal? (yes/no)")
+	args = parser.parse_args()
+	return args
 
 def user_input():
 	global num_vert, comp_x, comp_y, radius, tilt, alpha
@@ -137,7 +171,7 @@ def plot_geometric_shape():
 	x, y = data.T
 	plt.plot(*data.T, linewidth=2, marker=".", markersize=30, markerfacecolor='gray', color = 'silver', zorder = 0)
 	plt.axis('equal')
-	plt.show()
+	plt.draw()
 
 # deleting last coordinate from "vertices.txt" (as it was just used to close the geometric shape w/ gray line)
 def delete_last_coord():
@@ -149,4 +183,5 @@ def delete_last_coord():
 		for item in lines_minus_last:
 			f.write("{}".format(item))
 
-main()
+if __name__ == "__main__":
+	sys.exit(main())
