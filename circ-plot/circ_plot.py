@@ -3,11 +3,12 @@
 # Program used to output the coordinates and angles of components placed at
 # the vertices of a geometric shape with n-sides
 
-import matplotlib.pyplot as plt
+#"it's nice to keep the imports in alphabetical order"
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+import math
 import numpy as np
 import os
-import math
 
 def main():
 	user_input()
